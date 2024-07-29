@@ -1,0 +1,749 @@
+/* Global Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Body styling */
+body {
+    height: 100%;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #fbfaff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 5px 15px rgba(0, 0, 1, 0.5);
+    font-family: 'Arial', sans-serif;
+}
+
+/* Main container leaderboard styling */
+main {
+    width: 100vw;
+    height: 100vh;
+    background-color: #ffffff;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+/* Header styling */
+#header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2.5rem 2rem;
+}
+
+/* Controls bottom styling */
+.controls-bottom {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+/* Button styling */
+.delete {
+    background-color: #f55e77;
+    border: none;
+    border-radius: 2rem;
+    cursor: pointer;
+    color: #fff;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+  
+  .delete:active {
+    background-color: #e04d6f;
+  }
+
+.cancel {
+    width: 6rem;
+    height: 3rem;
+    border: none;
+    border-radius: 2rem;
+    cursor: pointer;
+    color: #fff;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+/* Delete button styling */
+.delete {
+    background-color: #f55e77;
+    border-bottom: 0.2rem solid #c0506a;
+    margin-right: 1rem;
+}
+
+.delete:active {
+    background-color: #e04d6f;
+}
+
+/* Cancel button styling */
+.cancel {
+    background-color: #ccc;
+    border-bottom: 0.2rem solid #999;
+}
+
+.cancel:active {
+    background-color: #b3b3b3;
+}
+
+/* Input container styling */
+.InputContainer {
+    width: 200px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to bottom, #5c5be5, #8080ed);
+    border-radius: 30px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.075);
+}
+
+/* Input field styling */
+.input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    caret-color: rgb(255, 81, 0);
+    background-color: rgb(255, 255, 255);
+    border-radius: 30px;
+    padding-left: 15px;
+    letter-spacing: 0.8px;
+    color: rgb(19, 19, 19);
+    font-size: 1rem; /* Adjusted font size for better readability */
+}
+
+/* Heading styling */
+h1 {
+    font-family: "Rubik", sans-serif;
+    font-size: 2rem; /* Adjusted for better emphasis */
+    color: #141a39;
+    text-transform: uppercase;
+    cursor: default;
+    margin-bottom: 1rem;
+}
+
+/* Leaderboard container styling */
+#leaderboard {
+    width: 100%;
+    position: relative;
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    color: #141a39;
+}
+
+/* Table row styling */
+tr {
+    transition: all 0.2s ease-in-out;
+    border-radius: 0.2rem;
+}
+
+/* Hover effect for table rows */
+tr:not(:first-child):hover {
+    background-color: #fff;
+    transform: scale(1.02); /* Slightly adjusted scale for subtle effect */
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Alternating row colors */
+tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+/* Table cell styling */
+td {
+    height: 5rem;
+    font-family: "Rubik", sans-serif;
+    font-size: 1.4rem;
+    padding: 1rem 2rem;
+    position: relative;
+}
+
+/* Checkbox styling */
+.checkbox {
+    width: 2rem;
+    text-align: center;
+    cursor: pointer;
+}
+
+.checkbox input {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* Leaderboard specific styling */
+.number {
+    width: 3rem;
+    font-size: 2rem; /* Adjusted for better alignment */
+    font-weight: bold;
+    text-align: left;
+}
+
+.name {
+    text-align: left;
+    font-size: 1.2rem;
+}
+
+.points {
+    font-weight: bold;
+    font-size: 1.3rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.points:first-child {
+    width: 10rem;
+}
+
+.gold-medal {
+    height: 3rem;
+    margin-left: 1.5rem;
+}
+
+/* Ribbon styling */
+.ribbon {
+    width: 100%;
+    height: 6rem;
+    top: -0.5rem;
+    background-color: #5c5be5;
+    position: absolute;
+    left: 0;
+    box-shadow: 0px 15px 11px -6px #7a7a7d;
+}
+
+.ribbon::before,
+.ribbon::after {
+    content: "";
+    height: 1.5rem;
+    width: 1.5rem;
+    bottom: -0.8rem;
+    position: absolute;
+    z-index: -1;
+    transform: rotate(45deg);
+    background-color: #5c5be5;
+}
+
+.ribbon::before {
+    left: 0.35rem;
+}
+
+.ribbon::after {
+    right: 0.35rem;
+}
+
+/* App container styling */
+.App {
+    text-align: center;
+}
+
+/* Navigation styling */
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav li {
+    display: inline;
+    margin-right: 10px;
+}
+
+/* Add entry and leaderboard container styling */
+.add-entry-container,
+.leaderboard-container {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+
+/* status */
+
+.status-button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    color: rgb(3, 3, 3);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .status-button.active {
+    background-color: green;
+  }
+  
+  .status-button.pending {
+    background-color: yellow;
+    color: black; /* Adjust text color for better visibility on yellow background */
+  }
+
+/* Form styling */
+form div {
+    margin-bottom: 1rem;
+}
+
+/* Admin form styling */
+.form-container {
+    width: 100%;
+    max-width: 400px;
+    background: linear-gradient(#212121, #212121) padding-box,
+                linear-gradient(145deg, transparent 35%, #5c5be5, #5c5be5) border-box;
+    border: 2px solid transparent;
+    padding: 32px 30px;
+    font-size: 14px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-sizing: border-box;
+    border-radius: 16px;
+    background-size: 200% 100%;
+    animation: gradient 5s ease infinite;
+    box-shadow: 0px 5px 15px rgba(0, 0, 1, 0.5);
+    margin-left: 20px;
+}
+
+.entries-container {
+    width: 100%;
+    max-width: 100%;
+    background: linear-gradient(#ffffff, #fffcfc) padding-box,
+                linear-gradient(145deg, transparent 35%, #5c5be5, #5c5be5) border-box;
+    border: 2px solid transparent;
+    padding: 20px 16px;
+    font-size: 12px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    box-sizing: border-box;
+    border-radius: 16px;
+    background-size: 200% 100%;
+    animation: gradient 5s ease infinite;
+    box-shadow: 0px 5px 15px rgba(0, 0, 1, 0.5);
+    overflow: hidden;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px; /* Space between search and table */
+}
+
+.search-input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.search-button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.search-button:hover {
+    background-color: #0056b3;
+}
+
+.entries-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.entries-table th,
+.entries-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: left;
+    word-wrap: break-word;
+}
+
+.entries-table th {
+    background-color: #f2f2f2;
+}
+
+.entries-table td {
+    font-size: 12px;
+    overflow-wrap: break-word;
+}
+
+.entries-table button {
+    margin-right: 5px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.entries-table button:hover {
+    background-color: #0056b3;
+}
+
+.entries-table button:last-child {
+    background-color: #dc3545;
+}
+
+.entries-table button:last-child:hover {
+    background-color: #c82333;
+}
+
+  
+  .action {
+    text-align: center;
+  }
+  
+  .delete-button {
+    background-color: #ef4444; /* Red background for delete button */
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+  
+  .delete-button:hover {
+    background-color: #dc2626; /* Darker red on hover */
+  }
+
+
+.InputContainer {
+    width: 210px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to bottom,#5c5be5,#5c5be5);
+    border-radius: 30px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.075);
+    margin-left: 315px;
+  }
+  
+  .input {
+    width: 200px;
+    height: 40px;
+    border: none;
+    outline: none;
+    caret-color: rgb(255, 81, 0);
+    background-color: rgb(255, 255, 255);
+    border-radius: 30px;
+    padding-left: 15px;
+    letter-spacing: 0.8px;
+    color: rgb(19, 19, 19);
+    font-size: 13.4px;
+  }
+  
+/* login css */
+
+.form {
+    background-color: #aaa8a8;
+    display: block;
+    padding: 1rem;
+    max-width: 350px;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .form-title {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 600;
+    text-align: center;
+    color: #393939;
+  }
+  
+  .input-container {
+    position: relative;
+  }
+  
+  .input-container input, .form button {
+    outline: none;
+    border: 1px solid #e5e7eb;
+    margin: 8px 0;
+  }
+  
+  .input-container input {
+    background-color: #fff;
+    padding: 1rem;
+    padding-right: 3rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    width: 300px;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
+  
+  .submit {
+    display: block;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    background-color: #4F46E5;
+    color: #ffffff;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    width: 100%;
+    border-radius: 0.5rem;
+    text-transform: uppercase;
+  }
+  
+  .error {
+    color: red;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.form-container button:active {
+    transform: scale(0.95);
+}
+
+.form-container .form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-container .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.form-container .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #0b0b0b;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.form-container .form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 8px;
+    color: #0b0a0a;
+    background-color: transparent;
+    border: 1px solid #414141;
+}
+
+.form-container .form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 8px;
+    resize: none;
+    color: #050505;
+    height: 96px;
+    border: 1px solid #414141;
+    background-color: transparent;
+}
+
+.form-container .form-group input::placeholder {
+    opacity: 0.5;
+}
+
+.form-container .form-group input:focus {
+    outline: none;
+    border-color: #5c5be5;
+}
+
+.form-container .form-group textarea:focus {
+    outline: none;
+    border-color: #5c5be5;
+}
+
+.form-container .form-submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    color: #717171;
+    font-weight: 600;
+    width: 40%;
+    background: #313131;
+    border: 1px solid #414141;
+    padding: 12px 16px;
+    font-size: inherit;
+    gap: 8px;
+    margin-top: 8px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.form-container .form-submit-btn:hover {
+    background-color: #fff;
+    border-color: #fff;
+}
+
+/* Responsive font sizes */
+@media (max-width: 740px) {
+    * {
+        font-size: 70%;
+    }
+}
+
+@media (max-width: 500px) {
+    * {
+        font-size: 55%;
+    }
+}
+
+@media (max-width: 390px) {
+    * {
+        font-size: 45%;
+    }
+}
+
+
+/* AdminForm */
+
+.admin-form-container {
+    display: flex;
+    justify-content: space-between; /* This distributes space between items */
+    align-items: flex-start; /* Aligns items to the top */
+    margin: 20px;
+  }
+  
+  .form-container {
+    width: 48%; /* Adjust width as needed */
+    padding: 20px;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    background-color: #ffffff;
+  }
+  
+  .entries-container {
+    width: 50%; /* Adjust width as needed */
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin-right: 25px;
+  }
+  
+  .entries-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .entries-table th,
+  .entries-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .entries-table th {
+    background-color: #f2f2f2;
+  }
+  
+  .entries-table button {
+    margin-right: 5px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .entries-table button:hover {
+    background-color: #0056b3;
+  }
+  
+  .entries-table button:last-child {
+    background-color: #dc3545;
+  }
+  
+  .entries-table button:last-child:hover {
+    background-color: #c82333;
+  }
+  
+  
+
+ /* sweet alert */ 
+
+.swal2-container .btn-success {
+    background-color: #28a745; 
+    color: white;            
+    border: none;             
+    padding: 10px 20px;     
+    border-radius: 5px;      
+    cursor: pointer;          
+    font-size: 16px;      
+  }
+  
+  .swal2-container .btn-success:hover {
+    background-color: #218838; 
+  }
+  
+  .swal2-container .btn-danger {
+    background-color: #dc3545; 
+    color: white;             
+    border: none;             
+    padding: 10px 20px;       
+    border-radius: 5px;     
+    cursor: pointer;          
+    font-size: 16px; 
+    margin-right: 20px;         
+  }
+  
+  .swal2-container .btn-danger:hover {
+    background-color: #c82333; 
+  }
+  
