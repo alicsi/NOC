@@ -9,14 +9,26 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (username === 'admin' && password === 'adminpassword') {
+  
+    const adminUsername = process.env.REACT_APP_ADMIN_USERNAME;
+    const adminPassword = process.env.REACT_APP_ADMIN_PASSWORD;
+    const csUsername = process.env.REACT_APP_CS_USERNAME;
+    const csPassword = process.env.REACT_APP_CS_PASSWORD;
+  
+    console.log('Admin Username:', adminUsername);
+    console.log('Admin Password:', adminPassword);
+    console.log('CS Username:', csUsername);
+    console.log('CS Password:', csPassword);
+  
+    if (username === adminUsername && password === adminPassword) {
       navigate('/admin-form');
-    } else if (username === 'cs' && password === 'cspassword') {
+    } else if (username === csUsername && password === csPassword) {
       navigate('/leaderboard');
     } else {
       alert('Invalid credentials');
     }
   };
+  
 
   return (
     <form className="form" onSubmit={handleSubmit}>

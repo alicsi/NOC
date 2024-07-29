@@ -16,7 +16,7 @@ const AdminForm = ({ onAddEntry }) => {
 
   const fetchEntries = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/leaderboard');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/leaderboard`);
       setEntries(response.data);
     } catch (error) {
       console.error('Error fetching entries:', error);
@@ -63,7 +63,7 @@ const AdminForm = ({ onAddEntry }) => {
 
   const createEntry = async (name, text) => {
     try {
-      await axios.post('http://localhost:5000/leaderboard', { name, text });
+      await axios.post(`${process.env.REACT_APP_API_URL}/leaderboard`, { name, text });
     } catch (error) {
       console.error('Error creating entry:', error);
     }
@@ -71,7 +71,7 @@ const AdminForm = ({ onAddEntry }) => {
 
   const updateEntry = async (id, name, text) => {
     try {
-      await axios.put(`http://localhost:5000/leaderboard/${id}`, { name, text });
+      await axios.put(`${process.env.REACT_APP_API_URL}/leaderboard/${id}`, { name, text });
     } catch (error) {
       console.error('Error updating entry:', error);
     }
@@ -102,7 +102,7 @@ const AdminForm = ({ onAddEntry }) => {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`http://localhost:5000/leaderboard/${id}`)
+        axios.delete(`${process.env.REACT_APP_API_URL}/leaderboard/${id}`)
           .then(() => {
             fetchEntries();
             swalWithBootstrapButtons.fire(
@@ -130,7 +130,7 @@ const AdminForm = ({ onAddEntry }) => {
   };
 
   const handleOpenLeaderboard = () => {
-    window.open('http://localhost:3000/leaderboard', '_blank');
+    window.open(`${process.env.REACT_APP_FRONTEND_URL}/leaderboard`, '_blank');
   };
 
   return (

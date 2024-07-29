@@ -15,11 +15,12 @@ const Leaderboard = () => {
   const soundEffect = useRef(null);
 
   useEffect(() => {
-    socket.current = io('http://localhost:5000');
+    // Initialize socket connection using environment variable
+    socket.current = io(process.env.REACT_APP_API_URL);
 
     const fetchLeaderboardData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/leaderboard');
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/leaderboard`);
         if (response.data) {
           setLeaderboardData(response.data);
         }
@@ -76,7 +77,7 @@ const Leaderboard = () => {
       buttonsStyling: false
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`http://localhost:5000/leaderboard/${id}`)
+        axios.delete(`${process.env.REACT_APP_API_URL}/leaderboard/${id}`)
           .then(() => {
             setLeaderboardData((prevData) =>
               prevData.filter((entry) => entry.id !== id)
@@ -109,7 +110,7 @@ const Leaderboard = () => {
     const newStatus = currentStatus === 'active' ? 'pending' : 'active';
 
     try {
-      await axios.put(`http://localhost:5000/leaderboard/${id}`, { name: currentName,  text: currentText, status: newStatus });
+      await axios.put(`${process.env.REACT_APP_API_URL}/leaderboard/${id}`, { name: currentName, text: currentText, status: newStatus });
       setLeaderboardData((prevData) =>
         prevData.map((entry) =>
           entry.id === id ? { ...entry, status: newStatus } : entry
