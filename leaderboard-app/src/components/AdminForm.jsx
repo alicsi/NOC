@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import '../styles.css';
+import { io } from 'socket.io-client';
 
 const MySwal = withReactContent(Swal);
 
@@ -19,6 +20,9 @@ const AdminForm = ({ onAddEntry }) => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
 
+  const socket = useRef(null);
+
+  // Fetch entries and history data from the server
   const fetchEntries = useCallback(async () => {
     try {
       const response = await axios.get(`${apiUrl}/leaderboard`);
@@ -45,17 +49,41 @@ const AdminForm = ({ onAddEntry }) => {
     }
   }, [apiUrl]);
 
+  useEffect(() => {
+    fetchEntries();
+    fetchHistory();
+
+    // Initialize Socket.IO connection
+    socket.current = io(apiUrl);
+
+    socket.current.on('new-entry', (data) => {
+      setEntries((prevEntries) => [data, ...prevEntries]);
+    });
+
+    socket.current.on('update-entry', (updatedEntry) => {
+      setEntries((prevEntries) =>
+        prevEntries.map((entry) =>
+          entry.id === updatedEntry.id ? { ...entry, ...updatedEntry } : entry
+        )
+      );
+    });
+
+    socket.current.on('delete-entry', (id) => {
+      setEntries((prevEntries) => prevEntries.filter((entry) => entry.id !== id));
+    });
+
+    return () => {
+      socket.current.disconnect();
+    };
+  }, [fetchEntries, fetchHistory, apiUrl]);
+
   const handleSearch = useCallback(() => {
-    const filtered = (entries || []).filter(entry => 
+    const filtered = (entries || []).filter(entry =>
       (entry.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
       (entry.text || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredEntries(filtered);
   }, [entries, searchTerm]);
-
-  useEffect(() => {
-    fetchEntries();
-  }, [fetchEntries]);
 
   useEffect(() => {
     handleSearch();
@@ -76,8 +104,6 @@ const AdminForm = ({ onAddEntry }) => {
       setName('');
       setTextarea('');
       setEditingEntry(null);
-      fetchEntries();
-      if (onAddEntry) onAddEntry();
     } catch (error) {
       console.error('Error saving entry:', error);
     }
@@ -127,7 +153,7 @@ const AdminForm = ({ onAddEntry }) => {
         axios.delete(`${apiUrl}/leaderboard/${id}`)
           .then(() => {
             fetchEntries();
-            fetchHistory(); // Ensure history is updated after deletion
+            fetchHistory();
             swalWithBootstrapButtons.fire(
               'Deleted!',
               'Your entry has been deleted.',
