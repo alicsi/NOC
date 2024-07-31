@@ -13,18 +13,40 @@ const AdminForm = ({ onAddEntry }) => {
   const [editingEntry, setEditingEntry] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredEntries, setFilteredEntries] = useState([]);
+  const [history, setHistory] = useState([]);
+  const [showHistory, setShowHistory] = useState(false);
 
-  const fetchEntries = async () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
+  const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
+
+  const fetchEntries = useCallback(async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/leaderboard`);
-      setEntries(response.data);
+      const response = await axios.get(`${apiUrl}/leaderboard`);
+      if (Array.isArray(response.data)) {
+        setEntries(response.data);
+      } else {
+        console.error('Unexpected response data:', response.data);
+      }
     } catch (error) {
       console.error('Error fetching entries:', error);
     }
-  };
+  }, [apiUrl]);
+
+  const fetchHistory = useCallback(async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/deleted-entries`);
+      if (Array.isArray(response.data)) {
+        setHistory(response.data);
+      } else {
+        console.error('Unexpected response data:', response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching history:', error);
+    }
+  }, [apiUrl]);
 
   const handleSearch = useCallback(() => {
-    const filtered = entries.filter(entry => 
+    const filtered = (entries || []).filter(entry => 
       (entry.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
       (entry.text || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -33,7 +55,7 @@ const AdminForm = ({ onAddEntry }) => {
 
   useEffect(() => {
     fetchEntries();
-  }, []);
+  }, [fetchEntries]);
 
   useEffect(() => {
     handleSearch();
@@ -63,7 +85,7 @@ const AdminForm = ({ onAddEntry }) => {
 
   const createEntry = async (name, text) => {
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/leaderboard`, { name, text });
+      await axios.post(`${apiUrl}/leaderboard`, { name, text });
     } catch (error) {
       console.error('Error creating entry:', error);
     }
@@ -71,7 +93,7 @@ const AdminForm = ({ onAddEntry }) => {
 
   const updateEntry = async (id, name, text) => {
     try {
-      await axios.put(`${process.env.REACT_APP_API_URL}/leaderboard/${id}`, { name, text });
+      await axios.put(`${apiUrl}/leaderboard/${id}`, { name, text });
     } catch (error) {
       console.error('Error updating entry:', error);
     }
@@ -102,9 +124,10 @@ const AdminForm = ({ onAddEntry }) => {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`${process.env.REACT_APP_API_URL}/leaderboard/${id}`)
+        axios.delete(`${apiUrl}/leaderboard/${id}`)
           .then(() => {
             fetchEntries();
+            fetchHistory(); // Ensure history is updated after deletion
             swalWithBootstrapButtons.fire(
               'Deleted!',
               'Your entry has been deleted.',
@@ -130,7 +153,14 @@ const AdminForm = ({ onAddEntry }) => {
   };
 
   const handleOpenLeaderboard = () => {
-    window.open(`${process.env.REACT_APP_FRONTEND_URL}/leaderboard`, '_blank');
+    window.open(`${frontendUrl}/leaderboard`, '_blank');
+  };
+
+  const toggleHistoryModal = () => {
+    if (!showHistory) {
+      fetchHistory();
+    }
+    setShowHistory(!showHistory);
   };
 
   return (
@@ -138,7 +168,7 @@ const AdminForm = ({ onAddEntry }) => {
       <div className="form-container">
         <form className="form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="name">Name</label>
+            <label htmlFor="name">Client Name: </label>
             <input
               required
               name="name"
@@ -149,7 +179,7 @@ const AdminForm = ({ onAddEntry }) => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="textarea">How Can We Help You?</label>
+            <label htmlFor="textarea">Issue: </label>
             <textarea
               required
               cols="50"
@@ -164,6 +194,7 @@ const AdminForm = ({ onAddEntry }) => {
             {editingEntry ? 'Update' : 'Submit'}
           </button>
           <button type="button" onClick={handleOpenLeaderboard}>Open Leaderboard</button>
+          <button type="button" onClick={toggleHistoryModal}>Show History</button>
         </form>
       </div>
 
@@ -188,7 +219,7 @@ const AdminForm = ({ onAddEntry }) => {
             </tr>
           </thead>
           <tbody>
-            {filteredEntries.slice(0, 3).map((entry) => (
+            {(filteredEntries || []).slice(0, 3).map((entry) => (
               <tr key={entry.id}>
                 <td>{entry.name || 'No Name'}</td>
                 <td>{entry.text || 'No Description'}</td>
@@ -201,6 +232,33 @@ const AdminForm = ({ onAddEntry }) => {
           </tbody>
         </table>
       </div>
+
+      {showHistory && (
+        <div className="modal-overlay">
+          <div className="history-modal">
+            <h2>Deleted Entries History</h2>
+            <button onClick={toggleHistoryModal} className="close-button">Close</button>
+            <table className="history-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Deleted At</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(history || []).map((entry) => (
+                  <tr key={entry.id}>
+                    <td>{entry.name || 'No Name'}</td>
+                    <td>{entry.text || 'No Description'}</td>
+                    <td>{entry.date_deleted ? new Date(entry.date_deleted).toLocaleString() : 'N/A'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

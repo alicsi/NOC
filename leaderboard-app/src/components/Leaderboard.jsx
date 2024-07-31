@@ -15,7 +15,6 @@ const Leaderboard = () => {
   const soundEffect = useRef(null);
 
   useEffect(() => {
-    // Initialize socket connection using environment variable
     socket.current = io(process.env.REACT_APP_API_URL);
 
     const fetchLeaderboardData = async () => {
@@ -41,7 +40,7 @@ const Leaderboard = () => {
     socket.current.on('update-entry', (updatedEntry) => {
       setLeaderboardData((prevData) =>
         prevData.map((entry) =>
-          entry.id === updatedEntry.id ? updatedEntry : entry
+          entry.id === updatedEntry.id ? { ...entry, ...updatedEntry } : entry
         )
       );
     });
@@ -107,13 +106,13 @@ const Leaderboard = () => {
   };
 
   const handleToggleStatus = async (id, currentName, currentText, currentStatus) => {
-    const newStatus = currentStatus === 'active' ? 'pending' : 'active';
+    const newStatus = currentStatus === 'on going' ? 'pending' : 'on going';
 
     try {
-      await axios.put(`${process.env.REACT_APP_API_URL}/leaderboard/${id}`, { name: currentName, text: currentText, status: newStatus });
+      const response = await axios.put(`${process.env.REACT_APP_API_URL}/leaderboard/${id}`, { name: currentName, text: currentText, status: newStatus });
       setLeaderboardData((prevData) =>
         prevData.map((entry) =>
-          entry.id === id ? { ...entry, status: newStatus } : entry
+          entry.id === id ? { ...entry, ...response.data } : entry
         )
       );
     } catch (error) {
@@ -133,23 +132,30 @@ const Leaderboard = () => {
   const filteredLeaderboardData = filterLeaderboardData(leaderboardData, searchQuery);
 
   useEffect(() => {
-    const handleCanPlay = () => {
-      console.log('Audio is ready to play.');
-    };
-
     const audioElement = soundEffect.current;
+
     if (audioElement) {
+      const handleCanPlay = () => {
+        console.log('Audio is ready to play.');
+      };
+
       audioElement.addEventListener('canplay', handleCanPlay);
+
       return () => {
         audioElement.removeEventListener('canplay', handleCanPlay);
       };
     }
   }, []);
 
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleString();
+  };
+
   return (
     <main>
       <div id="header">
-        <h1></h1>
+        <h1>NOC</h1>
         <div className="InputContainer">
           <input
             placeholder="Search.."
@@ -163,21 +169,19 @@ const Leaderboard = () => {
         </div>
       </div>
       <div id="leaderboard">
-        <div className="ribbon"></div>
         <table>
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Text</th>
+              <th>Client</th>
+              <th>Issue</th>
               <th>Status</th>
+              <th>Date Time</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {filteredLeaderboardData.map((item) => (
               <tr key={item.id}>
-                <td className="number">{item.id}</td>
                 <td className="name">{item.name}</td>
                 <td className="text">{item.text}</td>
                 <td className="status">
@@ -185,9 +189,10 @@ const Leaderboard = () => {
                     onClick={() => handleToggleStatus(item.id, item.name, item.text, item.status)}
                     className={`status-button ${item.status}`}
                   >
-                    {item.status === 'active' ? 'Active' : 'Pending'}
+                    {item.status === 'on going' ? 'On going' : 'Pending'}
                   </button>
                 </td>
+                <td className="date-time">{item.date_created ? formatDate(item.date_created) : 'N/A'}</td>
                 <td className="action">
                   <button onClick={() => handleDelete(item.id)} className="delete-button">
                     Delete
@@ -198,7 +203,10 @@ const Leaderboard = () => {
           </tbody>
         </table>
       </div>
-      <audio ref={soundEffect} src={soundEffectFile} />
+      <div className="controls-bottom">
+        {/* Moved Show History button to AdminForm */}
+      </div>
+      <audio ref={soundEffect} src={soundEffectFile} preload="auto" />
     </main>
   );
 };
